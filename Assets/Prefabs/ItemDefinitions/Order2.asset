@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b77cc43f5c58f47a18313e245806fa, type: 3}
+  m_Name: Order2
+  m_EditorClassIdentifier: 
+  requiredItem: {fileID: 11400000, guid: 397b08b79f628f742827e45ada6bfc24, type: 2}
+  quantity: 1
+  reward: 10
+  maxWaitSeconds: 30
