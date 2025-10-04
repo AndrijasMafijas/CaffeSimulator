@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1801234280656832251
+--- !u!1 &5711896250137529208
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,13 +8,13 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7995344917322115503}
-  - component: {fileID: 3999320800571342913}
-  - component: {fileID: 7750410842651150742}
-  - component: {fileID: 2824339856202149453}
-  - component: {fileID: 78366988584472977}
-  - component: {fileID: 5991331388637555272}
-  - component: {fileID: 4437582143941645832}
+  - component: {fileID: 8925477129405725824}
+  - component: {fileID: 2264403484649406694}
+  - component: {fileID: 4914901028651017611}
+  - component: {fileID: 563063938360586183}
+  - component: {fileID: 4786139997258015555}
+  - component: {fileID: 2968914957518211098}
+  - component: {fileID: 2235963051125314644}
   m_Layer: 0
   m_Name: CoffeMachine
   m_TagString: Untagged
@@ -22,37 +22,37 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7995344917322115503
+--- !u!4 &8925477129405725824
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801234280656832251}
+  m_GameObject: {fileID: 5711896250137529208}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.6672767, z: -0, w: 0.74481}
   m_LocalPosition: {x: 20.33, y: 0.662, z: -3.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3167612608249343938}
+  - {fileID: 5193858943572930002}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 83.714, z: 0}
---- !u!33 &3999320800571342913
+--- !u!33 &2264403484649406694
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801234280656832251}
+  m_GameObject: {fileID: 5711896250137529208}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7750410842651150742
+--- !u!23 &4914901028651017611
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801234280656832251}
+  m_GameObject: {fileID: 5711896250137529208}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -91,13 +91,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2824339856202149453
+--- !u!64 &563063938360586183
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801234280656832251}
+  m_GameObject: {fileID: 5711896250137529208}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -113,13 +113,13 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &78366988584472977
+--- !u!114 &4786139997258015555
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801234280656832251}
+  m_GameObject: {fileID: 5711896250137529208}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9eecf547f3f93e4ea6c5100848b0174, type: 3}
@@ -134,13 +134,13 @@ MonoBehaviour:
   idleText: Press E to brew (needs Cup + Beans)
   brewingText: Brewing...
   readyText: Press E to collect Coffee
---- !u!65 &5991331388637555272
+--- !u!65 &2968914957518211098
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801234280656832251}
+  m_GameObject: {fileID: 5711896250137529208}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -155,13 +155,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4437582143941645832
+--- !u!114 &2235963051125314644
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801234280656832251}
+  m_GameObject: {fileID: 5711896250137529208}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa9197268d04ffe4abfb2618c7696479, type: 3}
@@ -171,7 +171,7 @@ MonoBehaviour:
   onInteract:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 78366988584472977}
+      - m_Target: {fileID: 4786139997258015555}
         m_TargetAssemblyTypeName: CoffeeMachine, Assembly-CSharp
         m_MethodName: OnInteract
         m_Mode: 1
@@ -183,7 +183,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &3458356059165246174
+--- !u!1 &6133160298428066090
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,8 +191,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3167612608249343938}
-  - component: {fileID: 3963497860055290817}
+  - component: {fileID: 5193858943572930002}
+  - component: {fileID: 6837183562446254326}
   m_Layer: 0
   m_Name: ProgressUi
   m_TagString: Untagged
@@ -200,28 +200,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3167612608249343938
+--- !u!4 &5193858943572930002
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3458356059165246174}
+  m_GameObject: {fileID: 6133160298428066090}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7995344917322115503}
+  m_Father: {fileID: 8925477129405725824}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3963497860055290817
+--- !u!114 &6837183562446254326
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3458356059165246174}
+  m_GameObject: {fileID: 6133160298428066090}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37e6e4712b235214aa464565740aaa39, type: 3}

@@ -44,6 +44,27 @@ public class Customer : MonoBehaviour
     private bool hasTarget;
     private NavMeshAgent agent;
 
+    // Animator for visuals (acquired from children so swapped prefabs work)
+    [Header("Animation")]
+    [Tooltip("Name of the float parameter used to drive locomotion (e.g. 'Speed')")]
+    public string animatorSpeedParameter = "Speed";
+    [Tooltip("Threshold above which the animator is considered moving")]
+    public float movingThreshold = 0.05f;
+    private Animator animator;
+    private Vector3 prevPosition;
+
+    // Optional explicit run clip or Animator state names
+    [Tooltip("Optional: AnimationClip to play for running (will be used as fallback if Animator doesn't have states)")]
+    public AnimationClip runAnimation;
+    [Tooltip("State name in the Animator to play for running (if present)")]
+    public string runStateName = "RunForward";
+    [Tooltip("State name in the Animator to play for idle (if present)")]
+    public string idleStateName = "Idle";
+
+    private Animation legacyAnimation; // legacy Animation component fallback
+    private int runStateHash = 0;
+    private int idleStateHash = 0;
+
     // queue
     private CustomerQueue queue;
 
@@ -58,6 +79,8 @@ public class Customer : MonoBehaviour
         EnsurePhysics();
         EnsureOrderUI();
         EnsureNav();
+        EnsureAnimator();
+        prevPosition = CurrentPosition();
         var player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -108,6 +131,8 @@ public class Customer : MonoBehaviour
             }
 
             TryAnnounceArrival();
+            UpdateAnimatorByAgent();
+            prevPosition = CurrentPosition();
             return;
         }
 
@@ -133,6 +158,10 @@ public class Customer : MonoBehaviour
         }
 
         TryAnnounceArrival();
+
+        // Update animator based on movement speed measured from position delta
+        UpdateAnimatorByPosition(prevPosition, CurrentPosition());
+        prevPosition = CurrentPosition();
     }
 
     private void TryAnnounceArrival()
@@ -263,6 +292,12 @@ public class Customer : MonoBehaviour
         return false;
     }
 
+    // Force customer to leave immediately (e.g., closing time)
+    public void ForceLeave()
+    {
+        StartLeave();
+    }
+
     private void StartLeave()
     {
         if (isLeaving) return;
@@ -378,6 +413,123 @@ public class Customer : MonoBehaviour
         if (rb != null)
         {
             rb.isKinematic = true;
+        }
+    }
+
+    // Acquire animator from children (useful when visuals are swapped at runtime)
+    private void EnsureAnimator()
+    {
+        // Prefer an Animator on the same GameObject first
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+
+        // Prepare legacy Animation fallback if a run clip was assigned
+        if (runAnimation != null)
+        {
+            legacyAnimation = GetComponent<Animation>();
+            if (legacyAnimation == null)
+            {
+                legacyAnimation = gameObject.AddComponent<Animation>();
+            }
+            if (legacyAnimation.GetClip(runAnimation.name) == null)
+            {
+                legacyAnimation.AddClip(runAnimation, runAnimation.name);
+            }
+        }
+
+        // Cache state hashes if animator has controller
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            runStateHash = Animator.StringToHash(runStateName);
+            idleStateHash = Animator.StringToHash(idleStateName);
+        }
+    }
+
+    // Unity callback when children change (ArtSwap may add visual children at runtime)
+    private void OnTransformChildrenChanged()
+    {
+        EnsureAnimator();
+    }
+
+    private void UpdateAnimatorByAgent()
+    {
+        if (animator == null)
+        {
+            // fallback to legacy Animation if assigned
+            float spdFallback = agent != null ? agent.velocity.magnitude : 0f;
+            HandleLegacyAnimation(spdFallback);
+            return;
+        }
+        if (agent == null) return;
+        float spd = agent.velocity.magnitude;
+
+        // Prefer driving parameters if animator supports them
+        animator.SetFloat(animatorSpeedParameter, spd);
+        animator.SetBool("IsMoving", spd > movingThreshold);
+
+        // If animator contains a run state, crossfade to it when moving
+        if (animator.runtimeAnimatorController != null && runStateHash != 0)
+        {
+            if (spd > movingThreshold && animator.HasState(0, runStateHash))
+            {
+                animator.CrossFade(runStateHash, 0.1f);
+            }
+            else if (spd <= movingThreshold && idleStateHash != 0 && animator.HasState(0, idleStateHash))
+            {
+                animator.CrossFade(idleStateHash, 0.1f);
+            }
+        }
+    }
+
+    private void UpdateAnimatorByPosition(Vector3 prev, Vector3 now)
+    {
+        // Calculate approximate horizontal speed
+        float dist = Vector3.Distance(new Vector3(prev.x, 0f, prev.z), new Vector3(now.x, 0f, now.z));
+        float spd = dist / Mathf.Max(0.0001f, Time.fixedDeltaTime);
+
+        if (animator == null)
+        {
+            HandleLegacyAnimation(spd);
+            return;
+        }
+
+        animator.SetFloat(animatorSpeedParameter, spd);
+        animator.SetBool("IsMoving", spd > movingThreshold);
+
+        if (animator.runtimeAnimatorController != null && runStateHash != 0)
+        {
+            if (spd > movingThreshold && animator.HasState(0, runStateHash))
+            {
+                animator.CrossFade(runStateHash, 0.1f);
+            }
+            else if (spd <= movingThreshold && idleStateHash != 0 && animator.HasState(0, idleStateHash))
+            {
+                animator.CrossFade(idleStateHash, 0.1f);
+            }
+        }
+    }
+
+    // Play/stop legacy Animation clip when Animator isn't available
+    private void HandleLegacyAnimation(float speed)
+    {
+        if (legacyAnimation == null || runAnimation == null) return;
+        string cname = runAnimation.name;
+        if (speed > movingThreshold)
+        {
+            if (!legacyAnimation.IsPlaying(cname))
+            {
+                legacyAnimation.Play(cname);
+            }
+        }
+        else
+        {
+            if (legacyAnimation.IsPlaying(cname))
+            {
+                legacyAnimation.Stop(cname);
+            }
         }
     }
 }

@@ -16,14 +16,23 @@ public class CustomerSpawner : MonoBehaviour
     public bool spawnOnStart = true; // spawn one immediately for testing
     public bool randomizeSpawn = true; // pick random point from list
 
+    [Header("Business Hours")]
+    [Tooltip("If true, spawns only happen during open hours")] public bool useBusinessHours = true;
+    [Tooltip("Opening hour (inclusive) in 24h format")] [Range(0f,24f)] public float openHour = 8f;
+    [Tooltip("Closing hour (exclusive) in 24h format")] [Range(0f,24f)] public float closeHour = 24f;
+    [Tooltip("When closing time hits, existing customers are forced to leave")]
+    public bool kickCustomersOnClose = true;
+
     private float timer;
+    private bool wasOpen;
 
     private void Start()
     {
-        if (spawnOnStart)
+        if (spawnOnStart && IsOpenNow())
         {
             SpawnOne();
         }
+        wasOpen = IsOpenNow();
         ValidateSetup(logWarnings: true);
     }
 
@@ -31,8 +40,48 @@ public class CustomerSpawner : MonoBehaviour
     {
         if (!ValidateSetup()) return;
 
-        int count = FindObjectsOfType<Customer>().Length;
-        if (count >= maxCustomers) return;
+        // respect business hours
+        if (useBusinessHours)
+        {
+            bool openNow = IsOpenNow();
+            if (openNow)
+            {
+                // Handle open state
+                int count = FindObjectsOfType<Customer>().Length;
+                if (count < maxCustomers)
+                {
+                    timer += Time.deltaTime;
+                    if (timer >= spawnInterval)
+                    {
+                        timer = 0f;
+                        SpawnOne();
+                    }
+                }
+            }
+            else
+            {
+                timer = 0f; // reset timer while closed
+            }
+
+            // detect transition from open -> closed
+            if (wasOpen && !openNow)
+            {
+                if (kickCustomersOnClose)
+                {
+                    var customers = FindObjectsOfType<Customer>();
+                    foreach (var c in customers)
+                    {
+                        c.ForceLeave();
+                    }
+                }
+            }
+            wasOpen = openNow;
+            return;
+        }
+
+        // No business hours: default spawn behavior
+        int defaultCount = FindObjectsOfType<Customer>().Length;
+        if (defaultCount >= maxCustomers) return;
 
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
@@ -40,6 +89,19 @@ public class CustomerSpawner : MonoBehaviour
             timer = 0f;
             SpawnOne();
         }
+    }
+
+    private bool IsOpenNow()
+    {
+        var tod = TimeOfDayManager.Instance;
+        if (tod == null) return true; // if no time system, always open
+        float h = tod.Hours;
+        // Handle ranges that might wrap past midnight
+        if (Mathf.Approximately(openHour, closeHour)) return true; // 24/7
+        if (openHour < closeHour)
+            return h >= openHour && h < closeHour; // normal daytime window
+        else
+            return h >= openHour || h < closeHour; // overnight window
     }
 
     private bool ValidateSetup(bool logWarnings = false)
@@ -82,6 +144,8 @@ public class CustomerSpawner : MonoBehaviour
     public void SpawnOne()
     {
         if (customerPrefab == null) return;
+        if (useBusinessHours && !IsOpenNow()) return;
+
         var sp = PickSpawnPoint();
         if (sp == null) return;
 
